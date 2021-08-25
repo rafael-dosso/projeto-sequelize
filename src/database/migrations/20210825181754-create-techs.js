@@ -2,30 +2,15 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('adresses', {
+    await queryInterface.createTable('techs', {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false
       },
-      userId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: { model: 'users', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
-      },
-      zipcode: {
+      name: {
         type: Sequelize.STRING,
-        allowNull: false
-      },
-      street: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      number: {
-        type: Sequelize.INTEGER,
         allowNull: false
       },
       createdAt: {
@@ -40,6 +25,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('adresses');
+    await queryInterface.dropTable('techs');
   }
 };

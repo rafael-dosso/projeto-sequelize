@@ -1,25 +1,26 @@
-const Adress = require('../models/Adress');
+const Tech = require('../models/Tech');
 const User = require('../models/User');
-const { index } = require('./UserController');
+
 
 module.exports = {
+
     async index(req, res) {
         const { userId } = req.params;
 
         const user = await User.findByPk(userId, {
-            include: { association: 'adresses' }
+            include: { association: 'techs' }
         });
 
         if (!user) {
             return res.status(400).json({ error: 'Usuario nao encontrado' });
         }
 
-        return res.json(user.adresses);
+        return res.json(user.techs);
     },
 
     async store(req, res) {
         const { userId } = req.params;
-        const { zipcode, street, number } = req.body;
+        const { name } = req.body;
 
         const user = await User.findByPk(userId);
 
@@ -27,13 +28,12 @@ module.exports = {
             return res.status(400).json({ error: 'Usuario nao encontrado' });
         }
 
-        const adress = await Adress.create({
-            zipcode,
-            street,
-            number,
-            userId,
-        });
+        const [tech] = await Tech.findOrCreate({
+            where: { name }
+        })
 
-        return res.json(adress);
+        await user.addTech(tech);
+
+        return res.json(tech)
     },
 }
